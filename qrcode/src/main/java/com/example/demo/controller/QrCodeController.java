@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.util.QRCodeUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -12,6 +13,9 @@ import java.io.File;
 @Controller
 public class QrCodeController {
 
+
+    @Value("${image.path}")
+    private String imagePath;
 
     /**
      * 根据 url 生成 普通二维码
@@ -42,9 +46,11 @@ public class QrCodeController {
         try {
             stream = response.getOutputStream();
             String logoPath = Thread.currentThread().getContextClassLoader().getResource("").getPath()
-                    + "templates" + File.separator + "logo.jpg";
+                    + "templates" + File.separator + "logo.png";
             //使用工具类生成二维码
             QRCodeUtil.encode(url, logoPath, stream, true);
+            //使用工具类生成二维码图片
+            QRCodeUtil.encode(url,logoPath,imagePath+File.separator+System.currentTimeMillis()+".png",true);
         } catch (Exception e) {
             e.getStackTrace();
         } finally {
